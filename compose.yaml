@@ -1,0 +1,44 @@
+services:
+  overleafbackup:
+    image: overleaf_backup_image
+    container_name: overleafbackup
+    hostname: overleafbackup
+    restart: always
+    volumes:
+      - ./downloads:/downloads
+      - ./etc:/etc
+      - ./log:/var/log
+
+      - ./files/auth_against_docker.py:/auth_against_docker.py:ro
+      - ./files/build_jail.sh:/build_jail.sh:ro
+      - ./files/download_files.py:/download_files.py:ro
+      - ./files/get_projects.py:/get_projects.py:ro
+      - ./files/pam_sshd:/etc/pam.d/sshd:ro
+      - ./files/process_user_auth.sh:/process_user_auth.sh:ro
+      - ./files/sshd_config:/etc/ssh/sshd_config:ro
+      - ./files/update_user_jail.sh:/update_user_jail.sh:ro
+      - ./files/update_userlist.py:/update_userlist.py:ro
+      - ./files/rush.rc:/etc/rush.rc:ro
+      - ./files/pre-rush.sh:/pre-rush.sh:ro
+      - ./files/update_project_list.py:/update_project_list.py:ro
+
+#      - ./files/config.toml:/etc/kc-ssh-pam/config.toml:ro
+
+      - /var/run/docker.sock:/var/run/docker.sock
+
+    ports:
+      - 993:22
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Etc/UTC
+#    networks:
+#      - overleaf-network
+#      - keycloak-network
+
+#networks:
+#  overleaf-network:
+#    external: true
+#  keycloak-network:
+#    external: true
+

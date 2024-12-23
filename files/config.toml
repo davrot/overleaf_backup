@@ -1,0 +1,6 @@
+realm = "master"
+endpoint = "https://psintern.neuro.uni-bremen.de/sso/"
+clientid = "linux-ssh"
+clientsecret = "REDACTED"
+clientscope = "openid"
+

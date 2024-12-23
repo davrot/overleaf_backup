@@ -1,0 +1,17 @@
+PasswordAuthentication yes
+PermitEmptyPasswords no
+KbdInteractiveAuthentication no
+UsePAM yes
+X11Forwarding no
+PrintMotd no
+AcceptEnv LANG LC_*
+PubkeyAuthentication yes
+AuthorizedKeysFile .ssh/authorized_keys
+
+Match Group sharelatex
+    ForceCommand /pre-rush.sh
+    AllowTcpForwarding no
+    X11Forwarding no
+    PasswordAuthentication yes
+    PubkeyAuthentication yes
+    AuthorizedKeysFile .ssh/authorized_keys
