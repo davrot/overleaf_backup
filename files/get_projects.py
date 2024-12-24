@@ -49,44 +49,52 @@ def main(username: str, project_id: str) -> None:
     project_list = download_files(username=username, project_id=project_id)
     clean(username=username, project_list=project_list)
 
-    os.makedirs(f"/downloads/{username}/{project_id}.git", mode=0o700, exist_ok=True)
+    path: str = f"/downloads/{username}/{project_id}.git"
+    filename: str = f"{username}_{project_id}.zip"
+
+    os.makedirs(f"{path}", mode=0o700, exist_ok=True)
+
     shutil.move(
-        f"{username}_{project_id}.zip",
-        f"/downloads/{username}/{project_id}.git/data.zip",
+        f"{filename}",
+        f"{path}/{filename}",
     )
 
     subprocess.run(
         [
-            f"cd /downloads/{username}/{project_id}.git && /usr/bin/unzip -qq -o data.zip "
+            f"/usr/bin/unzip -qq -o {filename} "
         ],
+        shell=True, cwd=path
+    )
+
+    subprocess.run(
+        [f"rm -f {path}/{filename}"], shell=True
+    )
+
+    subprocess.run(
+        [f"chmod -R 0755 {path} "],
         shell=True,
     )
-    subprocess.run(
-        [f"rm -f /downloads/{username}/{project_id}.git/data.zip"], shell=True
-    )
 
-    if not os.path.isdir("/downloads/{username}/{project_id}.git/.git"):
+    if not os.path.isdir(f"{path}/.git"):
 
         subprocess.run(
-            [f"cd /downloads/{username}/{project_id}.git && /usr/bin/git init -q "],
-            shell=True,
+            [f"/usr/bin/git init -q "],
+            shell=True, cwd=path
         )
 
     subprocess.run(
-        [f"cd /downloads/{username}/{project_id}.git && /usr/bin/git add --all "],
-        shell=True,
-    )
-    subprocess.run(
-        [
-            f"cd /downloads/{username}/{project_id}.git && /usr/bin/git commit -q -m 'by ShareLatex' "
-        ],
-        shell=True,
+        [f"/usr/bin/git add --all "],
+        shell=True, cwd=path
     )
 
+
     subprocess.run(
-        [f"chmod -R 0700 /downloads/{username}/{project_id}.git "],
-        shell=True,
+        [
+            f"/usr/bin/git commit -q -m 'by ShareLatex' "
+        ],
+        shell=True, cwd=path
     )
+
 
     return
 

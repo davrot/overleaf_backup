@@ -2,6 +2,8 @@ import docker  # type: ignore
 import json
 import tarfile
 import os
+from datetime import datetime, timedelta
+import subprocess
 
 
 def get_container(container_name: str) -> None | docker.models.containers.Container:
@@ -21,6 +23,26 @@ def get_container(container_name: str) -> None | docker.models.containers.Contai
     return locate_containers[0]
 
 
+def get_last_commit_time_minus_10(username: str, project_id: str) -> str:
+    path = f"/downloads/{username}/{project_id}.git"
+
+    # Get the last commit timestamp
+    git_command = ["git", "log", "-1", "--format=%cI"]
+    result = subprocess.run(git_command, capture_output=True, text=True, cwd=path)
+
+    if result.returncode != 0:
+        return ""
+
+    # Parse the ISO 8601 timestamp
+    commit_time = datetime.fromisoformat(result.stdout.strip())
+
+    # Subtract 10 minutes
+    adjusted_time = commit_time - timedelta(minutes=10)
+
+    # Format to ISO 8601 with Z suffix for UTC
+    return adjusted_time.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+
+
 def _create_file(
     our_container: None | docker.models.containers.Container,
     username: str,
@@ -33,13 +55,22 @@ def _create_file(
     if our_container is None:
         return False, "", ""
 
-    result: tuple[int, str] = our_container.exec_run(
+    timestamp: str = ""
+    try:
+        timestamp = get_last_commit_time_minus_10(
+            username=username, project_id=project_id
+        )
+    except Exception:
+        timestamp = ""
+
+    result = our_container.exec_run(
         (
             "/bin/bash -c '"
             "cd /overleaf/services/web && "
             "node modules/server-ce-scripts/scripts/download_zip.js "
             f"{project_id} "
             f"{fullpath} "
+            f"{timestamp} "
             "'"
         )
     )
@@ -195,7 +226,7 @@ def get_user_id(
 def download_files(
     username: str,
     project_id: str,
-    container_name: str = "/sharelatex",
+    container_name: str = "/overleafserver",
     path: str = "/var/lib/overleaf/",
 ) -> list[str]:
     our_container: None | docker.models.containers.Container = get_container(
