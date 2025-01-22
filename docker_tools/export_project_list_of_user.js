@@ -1,5 +1,5 @@
 const ProjectGetter = require('/overleaf/services/web/app/src/Features/Project/ProjectGetter');
-const { waitForDb } = require('/overleaf/services/web/app/src/infrastructure/mongodb')
+// const { waitForDb } = require('/overleaf/services/web/app/src/infrastructure/mongodb')
 const ProjectController = require('/overleaf/services/web/app/src/Features/Project/ProjectController');
 const fs = require('fs/promises'); 
 
@@ -15,12 +15,12 @@ async function main() {
     const userId = args[0];
     const filename = args[1];
 
-    try {
-        await waitForDb()
-    } catch (err) {
-        console.error('Cannot connect to mongodb')
-        throw err
-    }
+//    try {
+//        await waitForDb()
+//    } catch (err) {
+//        console.error('Cannot connect to mongodb')
+//        throw err
+//    }
 
     let projects = await ProjectGetter.promises.findAllUsersProjects(
         userId,

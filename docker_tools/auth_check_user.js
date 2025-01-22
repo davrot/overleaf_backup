@@ -1,4 +1,4 @@
-const { waitForDb } = require('/overleaf/services/web/app/src/infrastructure/mongodb')
+// const { waitForDb } = require('/overleaf/services/web/app/src/infrastructure/mongodb')
 const { User } = require('/overleaf/services/web/app/src/models/User')
 const bcrypt = require('/overleaf/services/web/node_modules/bcrypt')
 
@@ -14,12 +14,12 @@ async function main() {
     const password = args[1];
     const query =  {"email": username };
     
-    try {
-        await waitForDb()
-    } catch (err) {
-        console.error('Cannot connect to mongodb')
-        process.exit(1); // fail
-    }
+//    try {
+//        await waitForDb()
+//    } catch (err) {
+//        console.error('Cannot connect to mongodb')
+//        process.exit(1); // fail
+//    }
 
     const user = await User.findOne(query).exec();
 

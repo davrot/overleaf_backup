@@ -1,6 +1,6 @@
 const ProjectEntityHandler = require('/overleaf/services/web/app/src/Features/Project/ProjectEntityHandler')
 const DocumentUpdaterHandler = require('/overleaf/services/web/app/src/Features/DocumentUpdater/DocumentUpdaterHandler')
-const { waitForDb } = require('/overleaf/services/web/app/src/infrastructure/mongodb')
+// const { waitForDb } = require('/overleaf/services/web/app/src/infrastructure/mongodb')
 const archiver = require('/overleaf/node_modules/archiver')
 const ProjectGetter = require('/overleaf/services/web/app/src/Features/Project/ProjectGetter');
 const settings = require('/overleaf/node_modules/@overleaf/settings')
@@ -38,7 +38,7 @@ async function main() {
     }
 
     try {
-        await waitForDb();
+//        await waitForDb();
 
         // Flush project to MongoDB
         await new Promise((resolve, reject) => {

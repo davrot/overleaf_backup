@@ -1,15 +1,15 @@
-const { waitForDb } = require('/overleaf/services/web/app/src/infrastructure/mongodb')
+// const { waitForDb } = require('/overleaf/services/web/app/src/infrastructure/mongodb')
 const { User } = require('/overleaf/services/web/app/src/models/User')
 
 
 async function main() {
     
-    try {
-        await waitForDb()
-    } catch (err) {
-        console.error('Cannot connect to mongodb')
-        process.exit(1); // fail
-    }
+//    try {
+//        await waitForDb()
+//    } catch (err) {
+//        console.error('Cannot connect to mongodb')
+//        process.exit(1); // fail
+//    }
 
     try {
         // Find all users and select only email and _id fields for efficiency
